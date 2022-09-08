@@ -15,6 +15,7 @@ int main(void)
 	Signal(SIGINT, sigint_handler);/*catch (CTRL + C)*/
 	dirs = _getenv(environ, "PATH", res);/*get path directories*/
 	create_path_list(dirs, &head);/*create a linked list of these directories*/
+	/*free(dirs);*/
 	while (1) /*only terminates if feof/builtin_command evaluates to true*/
 	{
 		/* Read cmd from stdin */
@@ -24,9 +25,14 @@ int main(void)
 		if (n_read == -1)/*checks EOF status and exit if set*/
 		{
 			/*write(1, "\n", 1);*/
+			printf("head: %s\n", head->dir);
+			free_path_list(head);/*free the whole path_list, cmdline & env_var allocations*/
+			printf("past free-path-list\n");
 			exit(0);
 		}
 		/* Evaluate the cmd */
 		evaluate_command_line(cmdline, head);
+		/*free(cmdline);done with it*/
+		printf("past free cmdline\n");
 	}
 }

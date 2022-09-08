@@ -130,6 +130,7 @@ int _setenv(const char *name, const char *value, int overwrite)
 			for (i = 0; value[i] != '\0'; i++)
 				environ[exists][a_res->val_index + i] = value[i];
 			environ[exists][a_res->val_index + i] = '\0';
+			/*free(old_value);malloc'd in _getenv*/
 		}
 		else
 		{
@@ -138,11 +139,13 @@ int _setenv(const char *name, const char *value, int overwrite)
 			if (environ[exists] == NULL)
 			{
 				unix_error("_setenv");
+				free(old_value);/*won't be using it*/
 				return (-1);
 			}
 			for (i = 0; old_value[i] != '\0'; i++)
 				environ[exists][i] = old_value[i];
 			environ[exists][i] = '\0';
+			/*free(old_value);malloc'd in _getenv*/
 		}
 	}
 	else
@@ -176,7 +179,8 @@ int _unsetenv(char *name)
 		j = i + 1;
 		for (; environ[j] != NULL; i++, j++)
 			environ[i] = environ[j];
-		environ[i] = NULL;/*terminate the environ array*/
+		environ[i++] = NULL;/*terminate the environ array*/
+		/*free(environ[i]);free the rest of environ? malloc'd at new_variable*/
 	}
 	return (0);
 }

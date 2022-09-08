@@ -132,3 +132,22 @@ char *parse_path(d_t **head, char *file)
 	}
 	return (NULL);/*file not in path*/
 }
+
+/**
+ * free_path_list - frees a d_t list
+ * @head: a pointer to a d_t list
+ * Return: Nothing
+ */
+void free_path_list(d_t *head)
+{
+	d_t *current;
+
+	while(head != NULL)
+	{
+		current = head;
+		head = head->next;
+		free(current->dir);
+		free(current);
+	}
+
+}

@@ -83,6 +83,7 @@ int _unsetenv(char *name);
 void evaluate_command_line(char *cmdline, d_t *head);
 char *parse_path(d_t **head, char *file);
 void print_pathlist(d_t **head);
+void free_path_list(d_t *head);
 int _write(char *buf, char *str, char *msg);
 int builtin_command(char **argv, int *status);
 int _cd(char **av, int *status);
