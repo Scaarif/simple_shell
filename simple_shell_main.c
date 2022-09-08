@@ -23,7 +23,7 @@ int main(void)
 		n_read = get_line(&cmdline, &len, STDIN_FILENO);
 		if (n_read == -1)/*checks EOF status and exit if set*/
 		{
-			write(1, "\n", 1);
+			/*write(1, "\n", 1);*/
 			exit(0);
 		}
 		/* Evaluate the cmd */
