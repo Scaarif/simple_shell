@@ -22,8 +22,7 @@ void sigint_handler(int sig)
 	char buf[PATH_S];
 	(void) sig;
 
-	/*printf("Caught SIGINT!\n");*/
-	_write(buf, "", "");/*no need for this line!*/
+	/*_write(buf, "", "");no need for this line!*/
 }
 
 /** WRAPPERS - call the base function and check for and handle errors **/
