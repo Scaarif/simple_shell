@@ -141,7 +141,7 @@ void evaluate_command(char **argv, d_t *head, int bg, int *status)
 				_write(buf, "background job", ": parent free to continue...\n");
 		}
 		else
-			_write(buf, argv[0], ": executable not found.\n");
+			_write(buf, argv[0], ": not found.\n");
 	}
 }
 

@@ -18,7 +18,7 @@ int main(void)
 	while (1) /*only terminates if feof/builtin_command evaluates to true*/
 	{
 		/* Read cmd from stdin */
-		write(1, "#cisfun$ ", 9);
+		/*write(1, "#cisfun$ ", 9);*/
 		/*Fgets(cmdline, MAXLINE, stdin);*/
 		n_read = get_line(&cmdline, &len, STDIN_FILENO);
 		if (n_read == -1)/*checks EOF status and exit if set*/

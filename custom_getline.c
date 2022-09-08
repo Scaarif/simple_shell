@@ -5,8 +5,7 @@
  * @newptr: destination pointer.
  * @ptr: source pointer.
  * @size: size of the new pointer.
- *
- * Return: no return.
+ * Return: Nothing
  */
 void _memcpy(void *newptr, const void *ptr, unsigned int size)
 {
@@ -19,14 +18,11 @@ void _memcpy(void *newptr, const void *ptr, unsigned int size)
 }
 
 /**
- * _realloc - reallocates a memory block.
+ * _realloc - reallocate a memory block.
  * @ptr: pointer to the memory previously allocated.
- * @old_size: size, in bytes, of the allocated space of ptr.
- * @new_size: new size, in bytes, of the new memory block.
- *
- * Return: ptr.
- * if new_size == old_size, returns ptr without changes.
- * if malloc fails, returns NULL.
+ * @old_size: size, in bytes, previously allocated.
+ * @new_size: new size, in bytes, to be reallocated
+ * Return: ptr to reallocated block & NULL on failure
  */
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 {
@@ -58,11 +54,12 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
 }
 
 /**
- * bring_line - assigns the line var for get_line
- * @lineptr: Buffer that store the input str
+ * bring_line - assign the line var for get_line
+ * @lineptr: buffer to store the input string
  * @buffer: str that is been called to line
  * @n: size of line
  * @j: size of buffer
+ * Return: Nothing
  */
 void bring_line(char **lineptr, size_t *n, char *buffer, size_t j)
 {
@@ -91,11 +88,11 @@ void bring_line(char **lineptr, size_t *n, char *buffer, size_t j)
 	}
 }
 /**
- * get_line - Read input from stream
- * @lineptr: buffer that stores the input
- * @n: size of lineptr
- * @stream: stream to read from
- * Return: The number of bytes
+ * get_line - getline() implementation, read input from stream
+ * @lineptr: buffer, stores the input
+ * @n: size of buffer
+ * @stream: the stream to read from
+ * Return: number of characters read and -1 if EOF
  */
 ssize_t get_line(char **lineptr, size_t *n, FILE *stream)
 {
@@ -139,3 +136,4 @@ ssize_t get_line(char **lineptr, size_t *n, FILE *stream)
 		input = 0;
 	return (retval);
 }
+
