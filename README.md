@@ -5,5 +5,4 @@ sprint's final project requirements. While the most common features have been im
 
 #Usage:
 Once main is up and running, it takes commands the same way bash does.
->>>$ compile all .c files to get it up and running (gcc #options# *.c -o simple_shell
-Then continue to use like any bash shell
+> $ compile all .c files to get it up and running (gcc #options# *.c -o simple_shell) then continue to use like any bash shell
