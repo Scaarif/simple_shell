@@ -93,7 +93,7 @@ char *_strdup_v2(const char *s)
 	char *new;
 	size_t len;
 
-	len = strlen(s);
+	len = _strlen((char *)s);
 	new = malloc(sizeof(char) * (len + 1));
 	if (new == NULL)
 		return (NULL);
