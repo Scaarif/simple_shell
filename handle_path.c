@@ -86,7 +86,7 @@ void traverse(char *curr_dir, char *file, int *found)
 	if (dir == NULL)
 	{
 		/*printf("opening %s failed\n", curr_dir);*/
-		perror("opendir ");
+		/*perror("opendir ");*/
 	}
 	else
 	{

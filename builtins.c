@@ -24,6 +24,7 @@ int _cd(char **av, int *status)
 {
 	res a_res = {-1, -1}, *res = &a_res;
 	char *pathname, _pwd[MAXLINE], _pathname[PATH_S], *path; /*buf[PATH_S];*/
+	char buf[100];
 	int success = 0;
 
 	getcwd(_pwd, MAXLINE);/*get current working directory*/
@@ -41,7 +42,7 @@ int _cd(char **av, int *status)
 		_strcpy(_pathname, (pathname = _getenv(environ, "OLDPWD", res)));
 		if (_pathname != NULL)
 		{
-			printf("%s\n", _pathname);
+			_write(buf, _pathname, "\n");
 			chdir(_pathname);
 		}
 		else
