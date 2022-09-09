@@ -18,30 +18,6 @@ int _write(char *buf, char *str, char *msg)
 	return (i);
 }
 
-/**
- * _strlen - strlen()
- * @s: string whose length to return
- * Return: length of string
- */
-int _strlen(char s[])
-{
-	int i = 0;
-
-	while (s[i] != '\0')
-		i++;
-	return (i);
-}
-
-/**
- * set_success - set success to true of false
- * @i: value to set success to
- * Return: Nothing
- */
-void set_success(int i)
-{
-	(void)i;
-	/*success = i;*/
-}
 
 /**
  * str_reverse - reverse a string
@@ -82,4 +58,27 @@ void _ltoa(long val, char s[], int base)
 		s[i++] = '-';
 	s[i] = '\0'; /*terminate string*/
 	str_reverse(s);
+}
+
+
+/**
+ * _strcat - concatenates two strings
+ * @dest: original string
+ * @src: string to append to original
+ * Return: pointer to dest
+ */
+char *_strcat(char *dest, char *src)
+{
+	char *p;
+	int i, j;
+
+	for (i = 0; dest[i] != '\0'; i++)
+	p = &dest[i + 1];
+	/*append the rest of the characters in src to dest*/
+	for (j = 0; src[j] != '\0'; j++)
+	{
+		*(p + j) = src[j];
+	}
+	dest[i + j + 1] = '\0';
+	return (dest);
 }

@@ -5,7 +5,7 @@
  * @_res: the res
  * @name_: the name to look for
  * @env: the env array to search from
- * Return: positive int(pos of last char) if name if found, 0 otherwise
+ * Return: positive int(pos of last char) if name if found, -1 otherwise
  */
 
 int get_name(char **env, char *name_, res *_res)
@@ -115,45 +115,27 @@ char *new_variable(const char *name, const char *value)
  * Return: 0 on success and -1 on error
  */
 int _setenv(const char *name, const char *value, int overwrite)
-{
-	/*set var <name> to <value> if it exists; else create a new one*/
+{/*set var <name> to <value> if it exists; else create a new one*/
 	res res = {-1, -1}, *a_res = &res;
-	char *old_value;
+	char *old_value, *var;
 	int exists = get_name(environ, (char *)name, a_res), i;
 
 	if (exists != -1 && exists && overwrite)
 	{
 		old_value = _getenv(environ, (char *)name, a_res);
-		if (_strlen(old_value) >= _strlen((char *)value))
-		{
-			/*replace old value with new*/
-			for (i = 0; value[i] != '\0'; i++)
-				environ[exists][a_res->val_index + i] = value[i];
-			environ[exists][a_res->val_index + i] = '\0';
-			/*free(old_value);malloc'd in _getenv*/
-		}
-		else
-		{
-			old_value = new_variable(name, value);/*more like new_value*/
-			environ[exists] = malloc(sizeof(char) * (_strlen(old_value) + 1));
-			if (environ[exists] == NULL)
-			{
-				unix_error("_setenv");
-				free(old_value);/*won't be using it*/
-				return (-1);
-			}
-			for (i = 0; old_value[i] != '\0'; i++)
-				environ[exists][i] = old_value[i];
-			environ[exists][i] = '\0';
-			/*free(old_value);malloc'd in _getenv*/
-		}
+		/*replace old value with new*/
+		for (i = 0; value[i] != '\0'; i++)
+			environ[exists][a_res->val_index + i] = value[i];
+		environ[exists][a_res->val_index + i] = '\0';
+		free(old_value);/*malloc'd in _getenv*/
 	}
 	else
 	{
 		/*get to the end of array, extend it and add the new variable*/
 		for (i = 0; environ[i] != NULL; i++)
 			;
-		environ[i++] =  new_variable(name, value);
+		environ[i++] =  (var = new_variable(name, value));
+		/*add_to_setenvs(set_envs, var);*/
 		environ[i] = NULL;/*NULL terminate environ*/
 	}
 	return (0);
@@ -167,20 +149,13 @@ int _setenv(const char *name, const char *value, int overwrite)
 int _unsetenv(char *name)
 {
 	res res = {-1, -1}, *a_res = &res;
-	int i, j;
 	int var_index = get_name(environ, name, a_res);
 
 	/*printf("var: %s\n", environ[var_index]);*/
 	if (var_index != -1 && var_index)/*var_index not 0*/
 	{
-		/*delete it from the array - how?*/
-		/*move all elements after it a pos forward*/
-		i = var_index;
-		j = i + 1;
-		for (; environ[j] != NULL; i++, j++)
-			environ[i] = environ[j];
-		environ[i++] = NULL;/*terminate the environ array*/
-		/*free(environ[i]);free the rest of environ? malloc'd at new_variable*/
+		/*remove_from_setenvs(set_envs, name);*/
+		free(environ[var_index]);/*malloc'd at new_variable*/
 	}
 	return (0);
 }

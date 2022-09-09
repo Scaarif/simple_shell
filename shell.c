@@ -1,33 +1,5 @@
 #include "main.h"
 
-/**
- * check_for_delims - check for delimeters in commandline
- * @cmdline: the command_line
- * @delims: the delims to check for
- * @res: an array of the delims in cmdline
- * Return: a string of delimiters found
- */
-char *check_for_delims(char *cmdline, char *delims, char *res)
-{
-	int i = 0, j = 0, k = 0;
-
-	for (; delims[i] != '\0'; i++)
-	{
-		for (j = 0; cmdline[j] != '\0'; j++)
-		{
-			if (delims[i] == cmdline[j])
-			{
-				res[k++] = cmdline[j];
-				break;
-			}
-			/*printf("char: %c\n",cmdline[j]);*/
-		}
-		/*printf("delim checked: %c\n", delims[i]);*/
-	}
-	res[k] = '\0';/*terminate it*/
-	return (res);
-}
-
 
 /**
  * get_file - get file name to look for in PATH
@@ -103,7 +75,7 @@ int parse_line(char *buf, char **argv, char del)
  */
 void evaluate_command(char **argv, d_t *head, int bg, int *status)
 {
-	char  *file, pathname[PATH_S], buf[MAXLINE], *executable;
+	char /**file, */pathname[PATH_S], buf[MAXLINE], *executable;
 	int wstatus, i = 0, ret; /*background programs flag*/
 	pid_t pid;
 
@@ -112,10 +84,9 @@ void evaluate_command(char **argv, d_t *head, int bg, int *status)
 		for (; (pathname[i] = argv[0][i]) != '\0'; i++)
 			;/*search for the executable in the PATH*/
 		pathname[i] = '\0';
-		/*printf("pathname: %s\n", pathname);*/
-		file = get_file(pathname);
-		executable = parse_path(&head, file);
-		if (executable)/*argv[0] = file to search*/
+		get_file(pathname);
+		executable = parse_path(&head, pathname);
+		if (_strlen(executable))/*argv[0] = file to search*/
 		{
 			if (argv[1] && argv[1][0] == '$')/*i.e if variable_substitution*/
 				variable_substitute(argv, status);
@@ -133,7 +104,6 @@ void evaluate_command(char **argv, d_t *head, int bg, int *status)
 					unix_error("wait_fg: waitpid error");
 				if (WIFEXITED(wstatus))
 				{
-					/*set_success(WEXITSTATUS(wstatus));*/
 					*status = WEXITSTATUS(wstatus);
 				}
 			}
@@ -155,43 +125,44 @@ void evaluate_command(char **argv, d_t *head, int bg, int *status)
 void evaluate_command_line(char *cmdline, d_t *head)
 {
 	char *argv[MAXARGS], buf[MAXLINE], del = ' ', delims[PATH_S], command[PATH_S];
-	char *commands[MAXARGS];
-	int bg, i, j, _success = 0, *status = &_success; /*progs & success flag*/
+	char *commands[MAXARGS], *separate[MAXARGS], sep_cmd[PATH_S];
+	int bg, i, j, k = 0, _success = 0, *status = &_success; /*flag*/
 
 	_strcpy(buf, cmdline); /*cpy cmdline into buf*/
-	/*determine no of commands in line, and for each, run through this process*/
 	handle_comments(buf);/*remove everything starting at # - usually ignored*/
-	check_for_delims(buf, "&|;", delims);
-	/*printf("check delims done\n");*/
-	if (_strlen(delims))/*delimiters present, more than one command*/
+	parse_line(buf, separate, ';');/*check for (;) first*/
+	while (separate[k] != NULL)
 	{
-		for (i = 0; delims[i] != '\0'; i++)
+		format_command(separate[k], sep_cmd);
+		check_for_delims(sep_cmd, "&|", delims);/*check for the other delimiters*/
+		if (_strlen(delims))/*delimiters present, more than one command*/
 		{
-			bg = parse_line(buf, commands, delims[i]);/*return (array) of commands*/
-			if (commands[0] == NULL)
-				return; /*Ignore empty cmd lines*/
-			/* get individual command argv(s) and evaluate */
-			for (j = 0; commands[j] != NULL; j++)
+			for (i = 0; delims[i] != '\0'; i++)
 			{
-				format_command(commands[j], command);
-				if (j < 1 || (j > 0 && ((delims[i] == '&' && !_success) ||
-					(delims[i] == '|' && _success))) || delims[i] == ';')
+				bg = parse_line(sep_cmd, commands, delims[i]);/*return array of commands*/
+				if (commands[0] == NULL)
+					return; /*Ignore empty cmd lines*/
+				for (j = 0; commands[j] != NULL; j++)
 				{
-					_strcpy(buf, command);
-					bg = parse_line(buf, argv, del);
-					if (argv[0] == NULL)
-					return; /*Ignore empty cmd - is that a possibility though?*/
-					evaluate_command(argv, head, bg, status);
+					format_command(commands[j], command);
+					if (j < 1 || (j > 0 && ((delims[i] == '&' && !_success) ||
+						(delims[i] == '|' && _success))) || delims[i] == ';')
+					{
+						_strcpy(buf, command);
+						bg = parse_line(buf, argv, del);
+						evaluate_command(argv, head, bg, status);
+					}
 				}
 			}
 		}
-	}
-	else
-	{/*else, a single command or ALIAS */
-		bg = parse_line(buf, argv, del);/*returns argv for command*/
-		if (argv[0] == NULL)
-			return; /*Ignore empty cmd lines*/
-		evaluate_command(argv, head, bg, status);
+		else
+		{/*else, a single command*/
+			bg = parse_line(sep_cmd, argv, del);/*returns argv for command*/
+			if (argv[0] == NULL)
+				return; /*Ignore empty cmd lines*/
+			evaluate_command(argv, head, bg, status);
+		}
+		k++;
 	}
 }
 

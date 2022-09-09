@@ -79,3 +79,17 @@ char *_strchr(char *s, char c)
 	return ('\0');
 }
 
+/**
+ * _strlen - strlen()
+ * @s: string whose length to return
+ * Return: length of string
+ */
+int _strlen(char s[])
+{
+	int i = 0;
+
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+

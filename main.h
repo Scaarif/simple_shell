@@ -50,70 +50,47 @@ typedef struct path_node
 	struct path_node *next;
 } d_t;
 
-/**
- * struct alias - alias structure
- * for the _alias function
- * @name: name of alias
- * @value: string pointer to alias value
- */
-typedef struct alias
-{
-	char *name;
-	char *value;
-} alias_t;
-
-/** WRAPPER FNS **/
-
+/* Process & signal handling functions */
 int unix_error(const char *msg);
 pid_t Fork(void);
 void Execve(const char *filename, char *const argv[], char *const envp[]);
-unsigned int wakeup(unsigned int secs);
-char *Fgets(char *str, int size, FILE *stream);
-int Kill(pid_t pid, int sig);
-unsigned int Sleep(unsigned int secs);
 void sigint_handler(int sig);
+handler_t *Signal(int signum, handler_t *handler);
 
-/* helper functions - p_writes */
-int parse_line(char *buf, char **argv, char del);
-int get_name(char **env, char *name_, res *_res);
-char *_getenv(char **env, char *name, res *_res);
-d_t *create_path_list(char *dir_str, d_t **head);
-int _setenv(const char *name, const char *value, int overwrite);
-int _unsetenv(char *name);
-void evaluate_command_line(char *cmdline, d_t *head);
-char *parse_path(d_t **head, char *file);
-void print_pathlist(d_t **head);
-void free_path_list(d_t *head);
-int _write(char *buf, char *str, char *msg);
-int builtin_command(char **argv, int *status);
-int _cd(char **av, int *status);
-char *check_for_delims(char *cmdline, char *delims, char *res);
-int _strlen(char s[]);
-void set_success(int i);
-char *format_command(char *cmd, char *command);
-char *handle_comments(char *buf);
-void _ltoa(long val, char s[], int base);
-void variable_substitute(char **argv, int *status);
-void _alias(char **argv, int *status);
-char *_strdup(char *str);
-int _strcmp(char *s1, char *s2);
-char *_strchr(char *s, char c);
-char *_strcpy(char *dest, char *src);
-
+/* Custom getline implementation */
 ssize_t get_line(char **lineptr, size_t *n, FILE *stream);
 
-/* safe I/O functions for signal handlers */
-ssize_t sio_puts(char s[]);
-ssize_t Sio_puts(char *s);
-void sio_error(char *s);
+/* shell-functions */
+void evaluate_command_line(char *cmdline, d_t *head);
+char *handle_comments(char *buf);
+char *format_command(char *cmd, char *command);
+void variable_substitute(char **argv, int *status);
+int builtin_command(char **argv, int *status);
+char *check_for_delims(char *cmdline, char *delims, char *res);
 
-/* sigprocmask & sigaction wrappers */
-handler_t *Signal(int signum, handler_t *handler);
-void Sigfillset(sigset_t *set);
-void Sigemptyset(sigset_t *set);
-void Sigaddset(sigset_t *set, int signum);
-void Sigprocmask(int how, const sigset_t *set, sigset_t *oldset);
+/* Custom string functions - emulators of string.h functions  */
+char *_strdup(char *str);
+int _strcmp(char *s1, char *s2);
+char *_strcpy(char *dest, char *src);
+char *_strchr(char *s, char c);
+int _strlen(char s[]);
+char *_strcat(char *dest, char *src);
 
+/* Environment handling functions */
+char *_getenv(char **env, char *name, res *_res);
+int _setenv(const char *name, const char *value, int overwrite);
+int _unsetenv(char *name);
+void add_to_setenvs(char **set_envs, char *var);
+void remove_from_setenvs(char **set_envs, char *name);
+
+/* PATH handling functions */
+d_t *create_path_list(char *dir_str, d_t **head);
+char *parse_path(d_t **head, char *file);
+void free_path_list(d_t *head);
+size_t print_pathlist(d_t *h);
+
+/* General helper functions */
+int _write(char *buf, char *str, char *msg);
+void _ltoa(long val, char s[], int base);
 
 #endif /*MAIN_H*/
-
