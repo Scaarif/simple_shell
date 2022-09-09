@@ -1,3 +1,5 @@
+#include "main.h"
+
 /**
  * print_pathlist - prints all the elements of a d_t list
  * @h: a pointer to a d_t list
