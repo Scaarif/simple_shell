@@ -70,11 +70,14 @@ char *check_for_delims(char *cmdline, char *delims, char *res);
 
 /* Custom string functions - emulators of string.h functions  */
 char *_strdup(char *str);
+char *_strdup_v2(const char *s);
 int _strcmp(char *s1, char *s2);
 char *_strcpy(char *dest, char *src);
 char *_strchr(char *s, char c);
 int _strlen(char s[]);
 char *_strcat(char *dest, char *src);
+void _memcpy(void *newptr, const void *ptr, unsigned int size);
+
 
 /* Environment handling functions */
 char *_getenv(char **env, char *name, res *_res);

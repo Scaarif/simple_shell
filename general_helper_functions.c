@@ -79,6 +79,24 @@ char *_strcat(char *dest, char *src)
 	{
 		*(p + j) = src[j];
 	}
-	dest[i + j + 1] = '\0';
+	dest[i + j] = '\0';
 	return (dest);
+}
+
+/**
+ * _strdup_v2 - duplicates a str in the heap memory.
+ * @s: Type char pointer str
+ * Return: duplicated str
+ */
+char *_strdup_v2(const char *s)
+{
+	char *new;
+	size_t len;
+
+	len = strlen(s);
+	new = malloc(sizeof(char) * (len + 1));
+	if (new == NULL)
+		return (NULL);
+	_memcpy(new, s, len + 1);
+	return (new);
 }

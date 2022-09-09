@@ -14,7 +14,7 @@ d_t *add_node_end(d_t **head, const char *str)
 	new = malloc(sizeof(d_t));
 	if (new == NULL)
 		return (NULL);
-	new->dir = strdup((char *)str);
+	new->dir = _strdup_v2(str);
 	if (*head == NULL)/*its an empty list*/
 	{
 		/*printf("in a null situation:\n");*/
@@ -78,7 +78,7 @@ void traverse(char *curr_dir, char *file, int *found)
 {
 	DIR *dir;
 	struct dirent *entry;
-	char path[1025];
+	char path[PATH_S];
 
 	/*printf("%s\n", curr_dir);*/
 
@@ -95,8 +95,8 @@ void traverse(char *curr_dir, char *file, int *found)
 			if (entry->d_name[0] != '.')
 			{
 				_strcpy(path, curr_dir);
-				strcat(path, "/");
-				strcat(path, entry->d_name);
+				_strcat(path, "/");
+				_strcat(path, entry->d_name);
 			}
 			if (_strcmp(entry->d_name, file) == 0)
 			{
